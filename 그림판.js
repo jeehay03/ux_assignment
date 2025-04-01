@@ -1,10 +1,14 @@
 function setup() {
-    createCanvas(1600, 900)
-    Body = createGraphics(width, height)
-    UI = createGraphics(width, height)
-    Pop = createGraphics(width, height)
-    Pop_on = false
-    UI.interaction = () => {
-        return false
+    createCanvas(1600,900)
+    background(255)
+
+}
+
+
+function draw(){
+    if (mouseIsPressed){
+        point(mouseX, mouseY)
     }
+
+
 }

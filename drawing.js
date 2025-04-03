@@ -156,7 +156,7 @@ function mouseDragged() {
   if (currentShape === "Line") {
     let d1 = dist(mouseX, mouseY, centerX, centerY);
     let d2 = dist(pmouseX, pmouseY, centerX, centerY);
-    if (d1 < radius * 0.8 && d2 < radius * 0.8) {
+    if (d1 < radius * 0.77 && d2 < radius * 0.77) {
       stroke(c);
       strokeWeight(w);
       line(pmouseX, pmouseY, mouseX, mouseY);
@@ -181,21 +181,21 @@ function mouseReleased() {
 
   // 자유선은 제외
   let d = dist(mouseX, mouseY, centerX, centerY);
-  if (currentShape && currentShape !== "Line" && d < radius * 0.8) {
+  if (currentShape && currentShape !== "Line" && d < radius * 0.7) {
     stroke(c);
     strokeWeight(w);
     fill(c);
 
     // 도형 그리기
     if (currentShape === "Circle") {
-      ellipse(mouseX, mouseY, 80, 80);
+      ellipse(mouseX, mouseY, 20, 20);
     } else if (currentShape === "Rectangle") {
-      rect(mouseX - 40, mouseY - 40, 80, 80);
+      rect(mouseX - 10, mouseY - 10, 20, 20);
     } else if (currentShape === "Triangle") {
       triangle(
-        mouseX, mouseY - 50,
-        mouseX - 40, mouseY + 40,
-        mouseX + 40, mouseY + 40
+        mouseX, mouseY - 7,
+        mouseX - 7, mouseY + 7,
+        mouseX + 7, mouseY + 7
       );
     }
   }

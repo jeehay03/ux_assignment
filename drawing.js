@@ -1,44 +1,38 @@
-// 색상, 선 굵기, 도형 버튼, 중심 위치 등 전역 변수 선언
 let c, w = 5;
 let centerX, centerY, radius = 300;
 let resetBtn;
 let shapeBtns = [], currentShape = null;
 let palette = [];
 
-// ──────────────────────────────────────
-// 버튼 클래스 정의
-// ──────────────────────────────────────
+
 class Button {
   constructor(x, y, w, h, fillColor, label = "", strokeColor = color(0)) {
     this.x = x; this.y = y;
     this.w = w; this.h = h;
-    this.fillColor = fillColor; // 버튼 배경 색
-    this.strokeColor = strokeColor; // 테두리 색
-    this.label = label;         // 버튼 텍스트
+    this.fillColor = fillColor; 
+    this.strokeColor = strokeColor; 
+    this.label = label;         
     this.callback = null;
     this.isClicked = false;
   }
 
   display() {
-    // 클릭 상태/hover 상태에 따라 밝기 조정
     let c = this.fillColor;
     if (this.isClicked) c = this.colorModify(-20);
     else if (this.isHovered()) c = this.colorModify(40);
 
-    // 버튼 그리기
+    // 버튼
     fill(c);
     stroke(this.strokeColor); 
     strokeWeight(2);
     rect(this.x, this.y, this.w, this.h, 8);
 
-    // 버튼 라벨
     fill(0);
     textAlign(CENTER, CENTER);
     textSize(16);
     text(this.label, this.x + this.w / 2, this.y + this.h / 2);
   }
 
-  // 색상 밝기 조정
   colorModify(delta) {
     let h = hue(this.fillColor);
     let s = saturation(this.fillColor);
@@ -46,7 +40,6 @@ class Button {
     return color(h, s, constrain(b + delta, 0, 100));
   }
 
-  // 마우스가 버튼 위에 있는지 확인
   isHovered() {
     return mouseX > this.x && mouseX < this.x + this.w &&
            mouseY > this.y && mouseY < this.y + this.h;
@@ -67,20 +60,22 @@ class Button {
   }
 }
 
-// ──────────────────────────────────────
-// 초기 설정
-// ──────────────────────────────────────
+
+
+
+
+
 function setup() {
   createCanvas(1600, 1600);
   colorMode(HSB);
   angleMode(DEGREES);
-  background(255); // 캔버스 초기화
+  background(255); 
 
   centerX = width / 2;
   centerY = height * 0.45;
-  c = color(0, 0, 0); // 기본 색상: 검정
+  c = color(0, 0, 0); //검정
 
-  // 색상 선택 원 생성
+  // 컬러 휠휠
   for (let angle = 0; angle < 360; angle += 30) {
     noStroke();
     let col = color(angle, 85, 90);
@@ -89,13 +84,13 @@ function setup() {
     palette.push({ x, y, color: col });
   }
 
-  // Reset 버튼 생성
+  // Reset 버튼
   resetBtn = new Button(25, 870, 150, 50, color(64, 0, 85), "Reset");
   resetBtn.onClick(() => {
-    background(255); // 캔버스 전체 초기화
+    background(255);
   });
 
-  // 도형 버튼 생성
+  // 도형 버튼
   let shapeLabels = ["Circle", "Rectangle", "Triangle", "Line"];
   for (let i = 0; i < shapeLabels.length; i++) {
     let btn = new Button(25, 550 + i * 80, 150, 50, color(64, 0, 85), shapeLabels[i]);
@@ -104,54 +99,53 @@ function setup() {
   }
 }
 
-// ──────────────────────────────────────
-// 매 프레임 UI 그리기
-// ──────────────────────────────────────
+
+
+
+
 function draw() {
-  // 왼쪽 UI 패널
+  // 왼쪽 박스
   fill(0, 0, 100);
   stroke(64, 0, 85);
   strokeWeight(2);
   rect(0, 0, 200, height);
 
-  // 색상 선택 원
+  // 컬러휠
   for (let p of palette) {
     fill(p.color);
     noStroke();
     circle(p.x, p.y, 60);
 
-    // 클릭 시 색상 변경
+    // 클릭할때 색깔 바꾸기기
     if (mouseIsPressed && dist(mouseX, mouseY, p.x, p.y) < 25) {
       c = p.color;
     }
   }
 
-  // 원형 그리기 영역 테두리
+  // 그리는 범위위
   noFill();
   stroke(64, 0, 85);
   strokeWeight(2);
   ellipse(centerX, centerY, radius * 1.6, radius * 1.6);
 
-  // 선 굵기 슬라이더 UI
+  // 선 굵기
   stroke(0); strokeWeight(6); noFill();
-  line(100, 100, 100, 400); // 슬라이더 막대
+  line(100, 100, 100, 400); 
   fill(0);
-  let handleY = map(w, 0.5, 30, 400, 100); // 굵기에 따른 핸들 위치
+  let handleY = map(w, 0.5, 30, 400, 100); 
   rect(50, handleY - 5, 100, 30);
 
-  // 슬라이더 드래그 시 굵기 조절
   if (mouseIsPressed &&mouseX > 50 && mouseX < 150 && mouseY > 100 && mouseY < 400) {
     w = (400 - mouseY) / 10;
   }
 
-  // 버튼 그리기
+
   resetBtn.display();
   for (let btn of shapeBtns) btn.display();
 }
 
-// ──────────────────────────────────────
-// 자유선 그리기
-// ──────────────────────────────────────
+
+
 function mouseDragged() {
   if (currentShape === "Line") {
     let d1 = dist(mouseX, mouseY, centerX, centerY);
@@ -163,23 +157,17 @@ function mouseDragged() {
     }
   }
 }
-
-// ──────────────────────────────────────
-// 마우스 눌렀을 때
-// ──────────────────────────────────────
 function mousePressed() {
   resetBtn.handleMousePressed();
   for (let btn of shapeBtns) btn.handleMousePressed();
 }
 
-// ──────────────────────────────────────
-// 마우스 뗐을 때
-// ──────────────────────────────────────
 function mouseReleased() {
   resetBtn.handleMouseReleased();
   for (let btn of shapeBtns) btn.handleMouseReleased();
 
-  // 자유선은 제외
+
+
   let d = dist(mouseX, mouseY, centerX, centerY);
   if (currentShape && currentShape !== "Line" && d < radius * 0.7) {
     stroke(c);
@@ -192,10 +180,9 @@ function mouseReleased() {
     } else if (currentShape === "Rectangle") {
       rect(mouseX - 10, mouseY - 10, 20, 20);
     } else if (currentShape === "Triangle") {
-      triangle(
-        mouseX, mouseY - 7,
+      triangle( mouseX, mouseY - 7, 
         mouseX - 7, mouseY + 7,
-        mouseX + 7, mouseY + 7
+         mouseX + 7, mouseY + 7
       );
     }
   }
